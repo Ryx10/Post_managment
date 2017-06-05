@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import SearchBar from '../components/SearchBar';
-import Post from "../components/Post";
+import SearchBar from '../../components/SearchBar/SearchBar';
+import Post from "../../components/Post/Post";
 import PropTypes from 'prop-types';
 
 class PostsContainer extends Component {
@@ -11,7 +11,7 @@ class PostsContainer extends Component {
 
     return (
       <div>
-        <SearchBar/>
+        <SearchBar searchPosts={this.props.searchPosts}/>
         {posts}
       </div>
     );
@@ -19,7 +19,8 @@ class PostsContainer extends Component {
 }
 
 PostsContainer.propTypes = {
-  posts: PropTypes.object
+  posts: PropTypes.array,
+  searchPosts: PropTypes.func.isRequired
 };
 
 export default PostsContainer;
