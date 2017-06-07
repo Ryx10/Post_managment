@@ -1,14 +1,15 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import './logo.scss'
 
-const Logo = (props) => {
-  return <img className={props.childClasses} src={props.logoSrc} />;
-};
-
-Logo.propTypes = {
-  childClasses: PropTypes.string,
-  logoSrc: PropTypes.string.isRequired
-
+class Logo extends Component {
+    static porpTypes = {
+        childClasses: PropTypes.string,
+        logoSrc: PropTypes.string.isRequired
+    };
+    render() {
+        return <img className={this.props.childClasses} src={this.props.logoSrc} />;
+    }
 };
 
 export default Logo;
