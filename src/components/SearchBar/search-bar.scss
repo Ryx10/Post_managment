@@ -16,4 +16,23 @@
       @include default_btn();
     }
   }
+  .autocomplete {
+    &__list {
+      visibility: hidden;
+      overflow: scroll;
+      position: absolute;
+      transition: all .1s;
+      background: #ffffff;
+      z-index: 1;
+      &-item {
+        cursor: pointer;
+      }
+    }
+    &__input {
+      &:focus + .autocomplete__list {
+        visibility: visible;
+        max-height: 300px;
+      }
+    }
+  }
 }

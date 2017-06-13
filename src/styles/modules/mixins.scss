@@ -22,3 +22,9 @@
   background-color: $text_alert_color;
   border-color: $text_alert_color;
 }
+
+@mixin vertical-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

@@ -1,0 +1,19 @@
+@import '../../styles/modules/modules';
+
+.preloader {
+  width: 150px;
+  height: 65px;
+  line-height: 65px;
+  text-align: center;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  background: #3f4444;
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 1.1em;
+  animation: bounce 2s infinite;
+  &.is-hidden {
+    display: none;
+  }
+}
