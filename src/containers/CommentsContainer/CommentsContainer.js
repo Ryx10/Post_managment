@@ -23,7 +23,7 @@ class CommentsContainer extends Component {
         fetch(url, headers)
             .then((response) => response.json())
             .then((comments) => {
-                this.setState(Object.assign(this.state, {comments: comments}));
+                this.setState({...this.state, comments});
             });
     }
     __renderComments() {
@@ -40,4 +40,3 @@ class CommentsContainer extends Component {
 }
 
 export default CommentsContainer;
-    

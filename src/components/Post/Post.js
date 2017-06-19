@@ -29,11 +29,32 @@ class Post extends Component {
     }
     __hideModal = (evt) => {
         evt.preventDefault();
-        this.setState(Object.assign(this.state, {modalIsOpen: false}));
+        this.setState({...this.state, modalIsOpen: false});
     }
     __showModal = (evt)  => {
         evt.preventDefault();
-        this.setState(Object.assign(this.state, {modalIsOpen: true}));
+        this.setState({...this.state, modalIsOpen: true});
+    }
+    __renderModal() {
+        return(
+            <Modal isOpen={this.state.modalIsOpen} >
+                <ModalHeader>
+                    <ModalClose onClick={this.__hideModal}/>
+                    <ModalTitle>Delete post</ModalTitle>
+                </ModalHeader>
+                <ModalBody>
+                    <p>Are your sure that you want to delete post?</p>
+                </ModalBody>
+                <ModalFooter>
+                    <button className="btn btn-default" onClick={this.__hideModal}>
+                        Close
+                    </button>
+                    <button className="btn btn-danger" onClick={this.__deletePost}>
+                        Delete
+                    </button>
+                </ModalFooter>
+            </Modal>
+        );
     }
     render() {
         return (
@@ -56,23 +77,7 @@ class Post extends Component {
                         </div>
                     </div>
                 </div>
-                <Modal isOpen={this.state.modalIsOpen} >
-                    <ModalHeader>
-                        <ModalClose onClick={this.__hideModal}/>
-                        <ModalTitle>Delete post</ModalTitle>
-                    </ModalHeader>
-                    <ModalBody>
-                        <p>Are your sure that you want to delete post?</p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <button className="btn btn-default" onClick={this.__hideModal}>
-                            Close
-                        </button>
-                        <button className="btn btn-danger" onClick={this.__deletePost}>
-                            Delete
-                        </button>
-                    </ModalFooter>
-                </Modal>
+                {this.__renderModal()}
             </div>
         );
     }

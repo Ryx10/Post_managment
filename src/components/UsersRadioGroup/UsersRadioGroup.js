@@ -10,12 +10,11 @@ class UsersRadioGroup extends Component {
 
     }
     __renderUsers() {
-        const users = this.props.users.map((user) => <UserCheckbox postAuthorChange={this.props.postAuthorChange}
-                                                                   key={user.id}
-                                                                   ref={this.props.userId}
-                                                                   userId={user.id}
-                                                                   checked={this.props.userId == user.id} />);
-        return users;
+        return this.props.users.map((user) => <UserCheckbox postAuthorChange={this.props.postAuthorChange}
+                                                            key={user.id}
+                                                            ref={this.props.userId}
+                                                            userId={user.id}
+                                                            checked={this.props.userId == user.id}/>);
     }
     render() {
         return (

@@ -8,6 +8,9 @@ const baseConfig = {
         headers: {
             'Content-Type': 'application/json'
         }
+    },
+    routes: {
+        new: 'new'
     }
 };
 

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import Post from '../../components/Post/Post';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import values from 'lodash/values';
 import './post-container.scss';
-import 'whatwg-fetch';
 
 
 class PostsContainer extends Component {
@@ -18,11 +17,11 @@ class PostsContainer extends Component {
             searchValue: ''
         };
     }
-    __searchEvent = (value) => {
-        this.setState(Object.assign(this.state, {searchValue: value}));
+    __searchEvent = (searchValue) => {
+        this.setState({ ...this.state, searchValue: searchValue });
     }
     __getPostsTitles() {
-        return _.values(this.props.posts.map(post => {return {label: post.title};}));
+        return values(this.props.posts.map(post => {return {label: post.title};}));
     }
     __renderPosts(value) {
         const filteredPosts = this.props.posts.filter((post) => post.title.indexOf(value) > -1);

@@ -17,22 +17,16 @@
     }
   }
   .autocomplete {
-    &__list {
-      visibility: hidden;
-      overflow: scroll;
-      position: absolute;
-      transition: all .1s;
-      background: #ffffff;
-      z-index: 1;
-      &-item {
-        cursor: pointer;
+    &__input {
+      border-color: $text_basic_color;
+      padding-left: 0;
+      &:active {
+        border-color: $background_blue_color;
       }
     }
-    &__input {
-      &:focus + .autocomplete__list {
-        visibility: visible;
-        max-height: 300px;
-      }
+    &__btn {
+      min-width: 75px;
+      @include default_btn();
     }
   }
 }

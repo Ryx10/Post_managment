@@ -29,7 +29,7 @@ class Page extends Component {
         fetch(url, {headers: baseConfig.api.url})
             .then( (response) => response.json() )
             .then( (responseData) => {
-                this.setState(Object.assign(this.state, {allPosts: responseData}));
+                this.setState({...this.state, allPosts: responseData});
             } )
             .catch( (err) => console.error(err) );
     }

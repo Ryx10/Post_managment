@@ -8,12 +8,14 @@ class Breadcrumbs extends Component {
         location: PropTypes.object
     }
     __renderBreadcrumbs(){
-        let pathParts = this.props.location.pathname.split('/');
+        const pathParts = this.props.location.pathname.split('/');
         let lastElement = pathParts.pop();
         lastElement = lastElement === 'new' ? 'New post' : `Post id:${lastElement}`;
         let currentUrl = '/';
         let breadcrumbs = pathParts.map((part, i) => {
-            if(!part.length) return ;
+            if(!part.length) { return ; }
+
+
             const el = (
                <span key={i} className="breadcrumbs__link">
                    <Link to={currentUrl}>{part}</Link>

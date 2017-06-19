@@ -11,7 +11,7 @@ class UserCheckbox extends Component {
         return (
             <div onChange={this.props.postAuthorChange} className="radio">
                 <label>
-                    <input type="radio" name="user" value={this.props.userId} defaultChecked={this.props.checked}/>
+                    <input type="radio" name="userId" value={this.props.userId} defaultChecked={this.props.checked}/>
                     {`User ${this.props.userId}`}
                 </label>
             </div>
