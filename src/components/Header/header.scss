@@ -2,14 +2,23 @@
 
 .app-container {
   .header {
+    display: flex;
+    flex-direction: row;
     padding: 25px 0;
     @include header();
+    &__item {
+      flex: 0 1 auto;
+      align-self: center;
+    }
     &__title {
       font-size: 1.2em;
       display: inline-block;
       margin-left: 0.25 * $base-margin;
       font-weight:inherit;
       color: $default_black;
+      align-self: center;
+      margin: 0 10px;
+      flex: 1 1 auto
     }
     &__image {
       max-width: 100%;
