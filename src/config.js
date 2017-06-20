@@ -1,4 +1,4 @@
-const baseConfig = {
+export const baseConfig = {
     header: {
         title: 'Page management',
         logoSrc: 'http://via.placeholder.com/100x100'
@@ -11,7 +11,11 @@ const baseConfig = {
     },
     routes: {
         new: 'new'
+    },
+    method: {
+        POST: 'POST',
+        PUT: 'PUT'
     }
 };
-
-export default baseConfig;
+export const ADDED = 'added';
+export const UPDATED = 'updated';

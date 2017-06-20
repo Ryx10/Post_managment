@@ -14,8 +14,9 @@ class UsersRadioGroup extends Component {
                                                             key={user.id}
                                                             ref={this.props.userId}
                                                             userId={user.id}
-                                                            checked={this.props.userId == user.id}/>);
+                                                            checked={this.props.userId === String(user.id)}/>);
     }
+
     render() {
         return (
             <div>

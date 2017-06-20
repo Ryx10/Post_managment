@@ -4,7 +4,7 @@ import Post from '../../components/Post/Post';
 import PropTypes from 'prop-types';
 import values from 'lodash/values';
 import './post-container.scss';
-
+import { connect } from 'react-redux';
 
 class PostsContainer extends Component {
     static propTypes = {
@@ -13,12 +13,6 @@ class PostsContainer extends Component {
     };
     constructor(props) {
         super(props);
-        this.state = {
-            searchValue: ''
-        };
-    }
-    __searchEvent = (searchValue) => {
-        this.setState({ ...this.state, searchValue: searchValue });
     }
     __getPostsTitles() {
         return values(this.props.posts.map(post => {return {label: post.title};}));
@@ -33,11 +27,25 @@ class PostsContainer extends Component {
     render() {
         return (
             <div>
-                <SearchBar searchEvent={this.__searchEvent} postsTitles={this.__getPostsTitles()} searchValue={this.state.inputValue} />
-                {this.__renderPosts(this.state.searchValue)}
+                <SearchBar searchEvent={this.props.searchEvent} postsTitles={this.__getPostsTitles()} inputValue={this.props.inputValue} updateInputValue={this.props.updateInputValue}/>
+                {this.__renderPosts(this.props.searchValue)}
             </div>
         );
     }
 }
 
-export default PostsContainer;
+const mapStateToProps = (state) => {
+    return {
+        searchValue: state.searchValue,
+        inputValue: state.inputValue
+    };
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return{
+        searchEvent: () => dispatch({type: 'SEARCH_FOR_POSTS'}),
+        updateInputValue: (value) => dispatch({type: 'UPDATE_INPUT_VALUE', value: value})
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostsContainer);

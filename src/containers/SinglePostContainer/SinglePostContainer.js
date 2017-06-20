@@ -4,11 +4,13 @@ import PropTypes from 'prop-types';
 import UsersRadioGroup from '../../components/UsersRadioGroup/UsersRadioGroup';
 import CommentsContainer from '../CommentsContainer/CommentsContainer';
 import {Link} from 'react-router-dom';
-import baseConfig from '../../config';
+import {baseConfig, ADDED, UPDATED} from '../../config';
+import commentsStore from '../../store/commentsStore';
 
 const urlForUsers = `${baseConfig.api.baseUrl}users`;
 const urlForPost = `${baseConfig.api.baseUrl}posts`;
 const headers = {headers: baseConfig.api.headers};
+
 
 class SinglePostContainer extends Component {
     static propTypes = {
@@ -75,8 +77,8 @@ class SinglePostContainer extends Component {
                 "userId": String(this.state.userId),
             };
             const url = this.props.match.params.id === baseConfig.routes.new ? `${baseConfig.api.baseUrl}posts` : `${baseConfig.api.baseUrl}posts/${this.props.postId}`;
-            const method = this.props.match.params.id === baseConfig.routes.new ? 'POST' : 'PUT';
-            const saveAction = this.props.match.params.id === baseConfig.routes.new ? 'added' : 'updated';
+            const method = this.props.match.params.id === baseConfig.routes.new ? baseConfig.method.POST : baseConfig.method.PUT;
+            const saveAction = this.props.match.params.id === baseConfig.routes.new ? ADDED : UPDATED;
             fetch(url, {
                 method: method,
                 headers: headers,
@@ -106,7 +108,7 @@ class SinglePostContainer extends Component {
         if(this.state.postId > 0) {
             return (
                 <div className="row">
-                    <CommentsContainer postId={this.state.postId} />
+                    <CommentsContainer store={commentsStore} postId={this.state.postId} />
                 </div>
             );
         }

@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import './search-bar.scss';
 import debounce from 'lodash/debounce';
 
+
 class SearchBar extends Component {
     static propTypes = {
         updateValue: PropTypes.func,
@@ -12,14 +13,12 @@ class SearchBar extends Component {
     };
     constructor(props) {
         super(props);
-        this.__debouceSearchValue = debounce((evt) => this.setState({searchValue: evt.target.value}), 100);
-        this.state = {
-            searchValue: ''
-        };
+        this.__debouceSearchValue = debounce((evt) => this.props.updateInputValue(evt.target.value), 100);
+
     }
     __renderOptions() {
-        if(!this.state.searchValue.length) { return ; }
-        const filteredOptions =  this.props.postsTitles.filter( el => el.label.indexOf(this.state.searchValue) > -1 );
+        if(!this.props.inputValue.length) { return ; }
+        const filteredOptions =  this.props.postsTitles.filter( el => el.label.indexOf(this.props.inputValue) > -1 );
         const optionsToDisplay = filteredOptions.map( (el, i) => <option value={el.label} className="autocomplete__list-item" key={i} onClick={() => this.__chooseOption(el.label)} /> );
         return optionsToDisplay;
     }
@@ -29,7 +28,7 @@ class SearchBar extends Component {
 
     }
     __chooseOption = (value) => {
-        this.setState({searchValue: value});
+        this.props.updateInputValue(value);
     }
     render() {
         return (
@@ -44,7 +43,7 @@ class SearchBar extends Component {
                     <datalist id="posts" className="autocomplete__list">
                         {this.__renderOptions()}
                     </datalist>
-                    <button onClick={() => this.props.searchEvent(this.state.searchValue)} className="btn autocomplete__btn">Go!</button>
+                    <button onClick={() => this.props.searchEvent(this.props.inputValue)} className="btn autocomplete__btn">Go!</button>
                 </div>
             </div>
         );

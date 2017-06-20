@@ -10,7 +10,8 @@ import SinglePostContainer from '../SinglePostContainer/SinglePostContainer';
 import AlertContainer from 'react-alert';
 import 'whatwg-fetch';
 import './page.scss';
-import baseConfig from '../../config';
+import {baseConfig} from '../../config';
+import postContainerStore from '../../store/postContainerStore';
 
 class Page extends Component {
     constructor() {
@@ -60,7 +61,7 @@ class Page extends Component {
                         <Header title={baseConfig.header.title} logoSrc={baseConfig.header.logoSrc} />
                     </div>
                     <div className="row">
-                        <Route exact path="/" component={() => <PostsContainer posts={this.state.allPosts} deletePost={this.__deletePost} />}/>
+                        <Route exact path="/" component={() => <PostsContainer store={postContainerStore} posts={this.state.allPosts} deletePost={this.__deletePost} />}/>
                         <Route path="/posts/:id" component={(props) => <SinglePostContainer {...props} title="Insert post" showAlert={this.__showAlert} />} />
                     </div>
                     <div className="row">
