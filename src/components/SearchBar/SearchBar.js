@@ -7,7 +7,8 @@ import debounce from 'lodash/debounce';
 
 class SearchBar extends Component {
     static propTypes = {
-        updateValue: PropTypes.func,
+        updateInputValue: PropTypes.func,
+        inputValue: PropTypes.string,
         searchEvent: PropTypes.func.isRequired,
         postsTitles: PropTypes.array
     };

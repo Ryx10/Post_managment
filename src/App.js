@@ -1,11 +1,14 @@
 import React, { Component } from "react";
-import Page from "./containers/Page/Page";
 import './styles/app.scss';
+import Routes from './routes';
 
 class App extends Component {
     render() {
         return (
-            <Page/>
+            <div>
+                {Routes()}
+            </div>
+
         );
     }
 }

@@ -1,3 +1,11 @@
+@import '../../styles/modules/modules';
 form {
   max-width: 75%;
+}
+
+.comment-box {
+  margin-top: 50px;
+  &__title {
+    color: $default_black;
+  }
 }

@@ -6,7 +6,7 @@ class UsersRadioGroup extends Component {
     static propTypes = {
         postAuthorChange: PropTypes.func.isRequired,
         users: PropTypes.array,
-        userId: PropTypes.string.isRequired
+        userId: PropTypes.number.isRequired
 
     }
     __renderUsers() {
@@ -14,7 +14,7 @@ class UsersRadioGroup extends Component {
                                                             key={user.id}
                                                             ref={this.props.userId}
                                                             userId={user.id}
-                                                            checked={this.props.userId === String(user.id)}/>);
+                                                            checked={this.props.userId === user.id}/>);
     }
 
     render() {

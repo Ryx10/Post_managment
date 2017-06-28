@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import reducers from '../reducers';
-import fetchCommentsReducer from './fetchCommentsReducer';
+import postReducer from './postReducer';
+import postDataReducer from './postDataReducer';
 
-const reducers = combineReducers(
-    fetchCommentsReducer
-);
+const rootReducer = combineReducers({
+    post: postReducer,
+    postData: postDataReducer
+});
 
- export default reducers;
+export default rootReducer;

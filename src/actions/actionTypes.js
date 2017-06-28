@@ -1,0 +1,9 @@
+export const SEARCH_POST        = 'SEARCH_POST';
+export const UPDATE_INPUT       = 'UPDATE_INPUT';
+export const REQUEST_POSTS      = 'REQUEST_POSTS';
+export const RECEIVE_POSTS      = 'RECEIVE_POSTS';
+export const SHOW_MODAL         = 'SHOW_MODAL';
+export const HIDE_MODAL         = 'HIDE_MODAL';
+export const REQUEST_POST_DATA  = 'REQUEST_USERS';
+export const RECEIVE_POST_DATA  = 'RECEIVE_USERS';
+export const POST_UPDATE        = 'POST_UPDATE';

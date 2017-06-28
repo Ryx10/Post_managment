@@ -2,86 +2,49 @@ import React, {Component} from 'react';
 import Preloader from '../../components/Preloader/Preloader';
 import PropTypes from 'prop-types';
 import UsersRadioGroup from '../../components/UsersRadioGroup/UsersRadioGroup';
-import CommentsContainer from '../CommentsContainer/CommentsContainer';
+import AlertContainer from 'react-alert';
 import {Link} from 'react-router-dom';
+import Comment from '../../components/Comment/Comment';
 import {baseConfig, ADDED, UPDATED} from '../../config';
-import commentsStore from '../../store/commentsStore';
-
-const urlForUsers = `${baseConfig.api.baseUrl}users`;
-const urlForPost = `${baseConfig.api.baseUrl}posts`;
-const headers = {headers: baseConfig.api.headers};
-
+import {fetchPostData, postUpdate} from '../../actions/actionsCreators';
+import 'whatwg-fetch';
+import {connect} from "react-redux";
 
 class SinglePostContainer extends Component {
     static propTypes = {
-        showAlert: PropTypes.func,
-        title: PropTypes.string,
+        fetchPostData: PropTypes.func.isRequired,
+        postUpdate: PropTypes.func.isRequired,
+        body: PropTypes.string,
+        userId: PropTypes.number,
+        comments: PropTypes.array,
+        showPreloader: PropTypes.bool,
+        users: PropTypes.array,
         match: PropTypes.object,
-        postId: PropTypes.number
+        title: PropTypes.string,
+        postId: PropTypes.string
     }
     constructor(props) {
         super(props);
-        this.state = {
-            showPreloader: false,
-            users: [],
-            title: '',
-            body:  '',
-            userId:  ''
-        };
+        this.props.fetchPostData(false, this.props.match.params.id);
     }
-    componentDidMount() {
-        this.__togglePreloader();
-        if(this.props.match.params.id !== baseConfig.routes.new) {
-            fetch(`${urlForPost}/${this.props.match.params.id}`, headers)
-                .then((post) => post.json())
-                .then((postData) => {
-                    fetch(urlForUsers, headers)
-                        .then((users) => users.json())
-                        .then((usersData) => {
-                            const newState = {
-                                title: postData.title,
-                                body: postData.body,
-                                userId: String(postData.userId),
-                                postId: postData.id,
-                                users: usersData
-                            };
-                            this.setState({...this.state, ...newState});
-                            this.__togglePreloader();
-                        });
-                })
-                .catch((err) => console.error(err));
-        } else if(this.props.match.params.id === baseConfig.routes.new) {
-            fetch(urlForUsers, headers)
-                .then((users) => users.json())
-                .then((usersData) => {
-                    const newState = {
-                        users: usersData
-                    };
-                    this.setState({...this.state, ...newState});
-                    this.__togglePreloader();
-                });
-        }
-
-    }
-    __postContentChange = (e) => {
-        let valueToUpdate = {};
-        valueToUpdate[e.target.name] = e.target.value;
-        this.setState({...this.state, ...valueToUpdate });
+    __postContentChange = (evt) => {
+        this.props.postUpdate(evt);
     }
     __savePost = (e) => {
         e.preventDefault();
         if(this.__validateFields()) {
             const postData = {
-                "title": this.state.title,
-                "body": this.state.body,
-                "userId": String(this.state.userId),
+                "title": this.props.title,
+                "body": this.props.body,
+                "userId": this.props.userId,
             };
-            const url = this.props.match.params.id === baseConfig.routes.new ? `${baseConfig.api.baseUrl}posts` : `${baseConfig.api.baseUrl}posts/${this.props.postId}`;
+            const url = this.props.match.params.id === baseConfig.routes.new ? `${baseConfig.api.baseUrl}posts` : `${baseConfig.api.baseUrl}posts/${this.props.match.params.id}`;
             const method = this.props.match.params.id === baseConfig.routes.new ? baseConfig.method.POST : baseConfig.method.PUT;
             const saveAction = this.props.match.params.id === baseConfig.routes.new ? ADDED : UPDATED;
+            console.log(JSON.stringify(postData), method);
             fetch(url, {
                 method: method,
-                headers: headers,
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(postData)
             })
                 .then(() => this.__showAlert(`Post successfully ${saveAction}`, 'success'))
@@ -90,36 +53,43 @@ class SinglePostContainer extends Component {
     }
     __validateFields() {
         let validation = true;
-        if(!this.state.title.length) {
+        console.log(this.props);
+        if(!this.props.title) {
             this.__showAlert('Title is required', 'error');
             validation = false;
         }
-        if(!this.state.body.length) {
+        if(!this.props.body) {
             this.__showAlert('Body is required', 'error');
             validation = false;
         }
-        if(!this.state.title.length) {
+        if(!this.props.userId) {
             this.__showAlert('User is required', 'error');
             validation = false;
         }
         return validation;
     }
-    __renderCommentsContainer() {
-        if(this.state.postId > 0) {
-            return (
-                <div className="row">
-                    <CommentsContainer store={commentsStore} postId={this.state.postId} />
-                </div>
-            );
-        }
+    __renderComments() {
+        return(
+            <div className="comment-box">
+                <h3 className="comment-box__title">Comments</h3>
+                {this.props.comments.map((comment) => <Comment key={comment.id} {...comment} />)}
+            </div>
+        );
     }
     __renderPreloader() {
-        const classNames = this.state.showPreloader ? 'preloader' : 'preloader is-hidden';
+        const classNames = this.props.showPreloader ? 'preloader' : 'preloader is-hidden';
         return <Preloader classNames={classNames}/>;
     }
     __togglePreloader = () => {
-        const togglePreloader = !this.state.showPreloader;
-        this.setState({...this.state, showPreloader: togglePreloader});
+        const togglePreloader = !this.props.showPreloader;
+        this.setState({...this.props, showPreloader: togglePreloader});
+    }
+    __showAlert = (meassage, type) => {
+        this.msg.show(meassage, {
+            time: 5000,
+            type: type,
+            theme: 'light'
+        });
     }
     render() {
         return (
@@ -127,14 +97,14 @@ class SinglePostContainer extends Component {
                 <div className="container">
                     <div className="row">
                         <form action="#" onSubmit={this.__savePost}>
-                            <h2>{this.state.title}</h2>
+                            <h2>{this.props.title}</h2>
                             <div className="form-group col-md-6 row">
-                                <input name="title" onChange={this.__postContentChange} className="form-control" type="text" placeholder="Title" value={this.state.title}/>
+                                <input name="title" onChange={this.__postContentChange} className="form-control" type="text" placeholder="Title" value={this.props.title}/>
                             </div>
                             <div className="form-group">
-                                <textarea name="body" onChange={this.__postContentChange} className="form-control" cols="30" rows="10" placeholder="Content.." value={this.state.body} />
+                                <textarea name="body" onChange={this.__postContentChange} className="form-control" cols="30" rows="10" placeholder="Content.." value={this.props.body} />
                             </div>
-                            <UsersRadioGroup postAuthorChange={this.__postContentChange} users={this.state.users} userId={this.state.userId}/>
+                            <UsersRadioGroup postAuthorChange={this.__postContentChange} users={this.props.users} userId={this.props.userId}/>
                             <div className="btn_box">
                                 <button className="btn btn-default" type="submit">Save changes</button>
                                 <Link to="/">
@@ -143,13 +113,29 @@ class SinglePostContainer extends Component {
                             </div>
                         </form>
                     </div>
-                    {this.__renderCommentsContainer()}
+                    {this.props.postId > 0 && this.__renderComments()}
                 </div>
+                <AlertContainer ref={a => this.msg = a} />
                 {this.__renderPreloader()}
             </div>
     );
     }
 }
 
-export default SinglePostContainer;
+const mapStateToProps = state => ({
+        showPreloader: state.postData.showPreloader,
+        users: state.postData.users,
+        title: state.postData.title,
+        body: state.postData.body,
+        userId: state.postData.userId,
+        comments: state.postData.comments
+});
+
+const mapDispatchToProps = dispatch => ({
+    fetchPostData: (isNew, postId) => dispatch(fetchPostData(isNew, postId)),
+    postUpdate: (evt) => dispatch(postUpdate(evt))
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SinglePostContainer);
     
