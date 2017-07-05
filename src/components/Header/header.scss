@@ -4,7 +4,7 @@
   .header {
     display: flex;
     flex-direction: row;
-    padding: 25px 0;
+    padding-bottom: 25px;
     @include header();
     &__item {
       flex: 0 1 auto;

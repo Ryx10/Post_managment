@@ -1,4 +1,4 @@
-import { SEARCH_POST, UPDATE_INPUT, RECEIVE_POSTS, REQUEST_POSTS, SHOW_MODAL, HIDE_MODAL, RECEIVE_POST_DATA, REQUEST_POST_DATA, POST_UPDATE } from './actionTypes';
+import { SEARCH_POST, UPDATE_INPUT, RECEIVE_POSTS, REQUEST_POSTS, SHOW_MODAL, HIDE_MODAL, RECEIVE_POST_DATA, REQUEST_POST_DATA, POST_UPDATE, REQUEST_LOGIN, RESPONSE_LOGIN, GET_USER_DATA_REQUEST, GET_USER_DATA_RESPONSE, LOGOUT_USER } from './actionTypes';
 import {baseConfig} from '../config';
 
 export function searchPost() {
@@ -104,13 +104,17 @@ export function requestPostData() {
 }
 
 export function fetchPostData(isNew, postId) {
+    let headers = new Headers();
+    headers.append("Authorization", localStorage.getItem('token'));
     if(!isNew) {
         return dispatch => {
             dispatch(requestPostData());
             fetch(`${baseConfig.api.baseUrl}posts/${postId}`)
                 .then(post => post.json())
                 .then(postData => {
-                    fetch(`${baseConfig.api.baseUrl}users`)
+                    fetch(`${baseConfig.api.baseUrl}authors`, {
+                        headers: headers
+                    })
                         .then(users => users.json())
                         .then(usersData => {
                             fetch(`${baseConfig.api.baseUrl}comments?postId=${postId}`)
@@ -153,5 +157,97 @@ export function postUpdate(evt) {
     return {
         type: POST_UPDATE,
         ...updatedValue
+    };
+}
+
+/*
+* Login actions
+*/
+
+function loginRequest() {
+    return {
+        type: REQUEST_LOGIN,
+    };
+}
+
+function loginResponse(data) {
+    return {
+        type: RESPONSE_LOGIN,
+        ...data
+    };
+}
+
+export function loginAction(login, password, showAlert) {
+    return dispatch => {
+        dispatch(loginRequest());
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('Access-Control-Allow-Origin', '*');
+        fetch(`${baseConfig.api.baseUrl}auth/login`,{
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({"login":login, "password": password}),
+        })
+            .then(response => {
+                if(response.status === 401) {
+                    showAlert('Login and/or password are incorrect', 'error');
+                    return {token: ""};
+                }
+                return response.json();
+            })
+            .then(data => dispatch(loginResponse(data)))
+            .catch(err => console.error(err));
+    };
+}
+/*
+* fetching logged user name
+*/
+
+function getLoggedUserDataRequest() {
+    return {
+        type: GET_USER_DATA_REQUEST
+    };
+    
+}
+
+function getLoggedUserDataResponse(data) {
+    return {
+        type: GET_USER_DATA_RESPONSE,
+        ...data
+    };
+
+}
+
+export function getLoggedUserData(token) {
+    return dispatch => {
+        dispatch(getLoggedUserDataRequest());
+        let headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+        headers.append('authorization', token);
+        headers.append('Access-Control-Allow-Origin', '*');
+
+        fetch(`${baseConfig.api.baseUrl}auth/me`, {
+            method: "GET",
+            headers: headers
+        })
+            .then(response => response.json())
+            .then(userData => {
+                const loggedUser = `${userData.firstName} ${userData.lastName}`;
+                const loggedUserId = userData.id;
+                dispatch(getLoggedUserDataResponse({loggedUser, loggedUserId}));
+                localStorage.setItem('user', loggedUser);
+                localStorage.setItem('userId', loggedUserId);
+            })
+            .catch(err => console.error(err));
+    };
+
+}
+/*
+* logout action
+*/
+
+export function userLogout() {
+    return {
+        type: LOGOUT_USER
     };
 }

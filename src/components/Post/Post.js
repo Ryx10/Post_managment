@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import './post.scss';
+import classNames from 'classnames';
 
 
 class Post extends Component {
@@ -9,8 +10,10 @@ class Post extends Component {
         title: PropTypes.string.isRequired,
         body: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
-        showModal: PropTypes.func.isRequired
-    }
+        showModal: PropTypes.func.isRequired,
+        loggedUserId: PropTypes.number,
+        userId: PropTypes.number
+    };
     constructor(props) {
         super(props);
     }
@@ -18,7 +21,7 @@ class Post extends Component {
     render() {
         return (
             <div>
-                <div className="post">
+                <div className={classNames('post', {'active': this.props.loggedUserId === this.props.userId})}>
                     <div className="row">
                         <div className="col-md-10">
                             <h3 className="post__title">{this.props.title}</h3>

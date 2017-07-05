@@ -4,13 +4,16 @@ import {Route, BrowserRouter as Router} from 'react-router-dom';
 import Page from './containers/Page/Page';
 import PostsContainer from './containers/PostsContainer/PostsContainer';
 import SinglePostContainer from './containers/SinglePostContainer/SinglePostContainer';
+import LoginContainer from './containers/LoginContainer/LoginContainer';
+
 
 export default () => { // eslint-disable-line
     return (
         <Router>
             <Page>
                 <Route exact path="/" component={PostsContainer}/>
-                <Route path="/posts/:id" component={SinglePostContainer} />
+                <Route path="/posts/:id" component={SinglePostContainer}/>
+                <Route path="/login" component={LoginContainer}/>
             </Page>
         </Router>
 

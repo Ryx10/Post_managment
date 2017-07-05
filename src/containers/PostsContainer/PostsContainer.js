@@ -29,8 +29,9 @@ class PostsContainer extends Component {
         inputValue: PropTypes.string,
         updateInput: PropTypes.func,
         searchValue: PropTypes.string,
-        updateInputValue: PropTypes.func.isRequired
-    }
+        updateInputValue: PropTypes.func.isRequired,
+        loggedUserId: PropTypes.string
+    };
     constructor(props) {
         super(props);
     }
@@ -40,7 +41,7 @@ class PostsContainer extends Component {
     __deletePost = (evt) => {
         evt.preventDefault();
         this.props.deletePost(this.props.deletingId, this.__showAlert);
-    }
+    };
     __getPostsTitles() {
         return values(this.props.allPosts.map(post => {return {label: post.title};}));
     }
@@ -50,11 +51,11 @@ class PostsContainer extends Component {
             type: type,
             theme: 'light'
         });
-    }
+    };
     __renderPosts(value) {
         const filteredPosts = this.props.allPosts.filter((post) => post.title.indexOf(value) > -1);
         const displayedPosts = filteredPosts.map((post) => {
-            return <Post key={post.id} {...post} showModal={this.props.showModal} />;
+            return <Post loggedUserId={parseInt(this.props.loggedUserId)} key={post.id} {...post} showModal={this.props.showModal} />;
         });
         return displayedPosts;
     }
@@ -97,7 +98,8 @@ const mapStateToProps = state => ({
     allPosts: state.post.allPosts,
     isFetching: state.post.isFetching,
     modalIsOpen: state.post.modalIsOpen,
-    deletingId: state.post.deletingId
+    deletingId: state.post.deletingId,
+    loggedUserId: state.login.loggedUserId
 
 });
 const mapDispatchToProps = dispatch => ({

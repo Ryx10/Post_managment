@@ -9,6 +9,8 @@ import {baseConfig, ADDED, UPDATED} from '../../config';
 import {fetchPostData, postUpdate} from '../../actions/actionsCreators';
 import 'whatwg-fetch';
 import {connect} from "react-redux";
+import AccessChecker from '../../components/AccessChecker/AccessChecker';
+
 
 class SinglePostContainer extends Component {
     static propTypes = {
@@ -93,7 +95,7 @@ class SinglePostContainer extends Component {
     }
     render() {
         return (
-            <div>
+            <AccessChecker>
                 <div className="container">
                     <div className="row">
                         <form action="#" onSubmit={this.__savePost}>
@@ -117,7 +119,7 @@ class SinglePostContainer extends Component {
                 </div>
                 <AlertContainer ref={a => this.msg = a} />
                 {this.__renderPreloader()}
-            </div>
+            </AccessChecker>
     );
     }
 }
