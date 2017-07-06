@@ -6,7 +6,7 @@ import AlertContainer from 'react-alert';
 import {Link} from 'react-router-dom';
 import Comment from '../../components/Comment/Comment';
 import {baseConfig, ADDED, UPDATED} from '../../config';
-import {fetchPostData, postUpdate} from '../../actions/actionsCreators';
+import {fetchPostData, postUpdate, checkBody, checkTitle, checkUser} from '../../actions/actionsCreators';
 import 'whatwg-fetch';
 import {connect} from "react-redux";
 import AccessChecker from '../../components/AccessChecker/AccessChecker';
@@ -23,14 +23,37 @@ class SinglePostContainer extends Component {
         users: PropTypes.array,
         match: PropTypes.object,
         title: PropTypes.string,
-        postId: PropTypes.string
+        postId: PropTypes.string,
+        titleIsValid: PropTypes.bool.isRequired,
+        bodyIsValid: PropTypes.bool.isRequired,
+        userIsValid: PropTypes.bool.isRequired,
+        checkTitle: PropTypes.func.isRequired,
+        checkBody: PropTypes.func.isRequired,
+        checkUser: PropTypes.func.isRequired
     }
     constructor(props) {
         super(props);
         this.props.fetchPostData(false, this.props.match.params.id);
     }
+    componentWillReceiveProps(nextProps) {
+        nextProps.title && this.props.checkTitle(nextProps.title);
+        nextProps.body && this.props.checkBody(nextProps.body);  
+        nextProps.userId && this.props.checkUser(nextProps.userId);        
+              
+    }
     __postContentChange = (evt) => {
         this.props.postUpdate(evt);
+        switch (evt.target.name) {
+            case 'title':
+                this.props.checkTitle(evt.target.value);
+                break;
+            case 'body':
+                this.props.checkBody(evt.target.value);
+                break;
+            case 'userId':
+                this.props.checkUser(evt.terget.value);
+                break;
+        }
     }
     __savePost = (e) => {
         e.preventDefault();
@@ -43,7 +66,6 @@ class SinglePostContainer extends Component {
             const url = this.props.match.params.id === baseConfig.routes.new ? `${baseConfig.api.baseUrl}posts` : `${baseConfig.api.baseUrl}posts/${this.props.match.params.id}`;
             const method = this.props.match.params.id === baseConfig.routes.new ? baseConfig.method.POST : baseConfig.method.PUT;
             const saveAction = this.props.match.params.id === baseConfig.routes.new ? ADDED : UPDATED;
-            console.log(JSON.stringify(postData), method);
             fetch(url, {
                 method: method,
                 headers: {'Content-Type': 'application/json'},
@@ -54,21 +76,10 @@ class SinglePostContainer extends Component {
         }
     }
     __validateFields() {
-        let validation = true;
-        console.log(this.props);
-        if(!this.props.title) {
-            this.__showAlert('Title is required', 'error');
-            validation = false;
-        }
-        if(!this.props.body) {
-            this.__showAlert('Body is required', 'error');
-            validation = false;
-        }
-        if(!this.props.userId) {
-            this.__showAlert('User is required', 'error');
-            validation = false;
-        }
-        return validation;
+        !this.props.titleIsValid && this.__showAlert('Title is required', 'error');
+        !this.props.bodyIsValid && this.__showAlert('Post body is required', 'error');
+        !this.props.userId && this.__showAlert('You have to choose author', 'error');        
+        return this.props.titleIsValid && this.props.bodyIsValid;
     }
     __renderComments() {
         return(
@@ -130,12 +141,18 @@ const mapStateToProps = state => ({
         title: state.postData.title,
         body: state.postData.body,
         userId: state.postData.userId,
-        comments: state.postData.comments
+        comments: state.postData.comments,
+        titleIsValid: state.validation.titleIsValid,
+        bodyIsValid: state.validation.bodyIsValid,
+        userIsValid: state.validation.userId
 });
 
 const mapDispatchToProps = dispatch => ({
     fetchPostData: (isNew, postId) => dispatch(fetchPostData(isNew, postId)),
-    postUpdate: (evt) => dispatch(postUpdate(evt))
+    postUpdate: (evt) => dispatch(postUpdate(evt)),
+    checkTitle: value => dispatch(checkTitle(value)),
+    checkBody: value => dispatch(checkBody(value)),
+    checkUser: value => dispatch(checkUser(value))
 });
 
 

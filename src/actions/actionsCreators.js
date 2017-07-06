@@ -1,4 +1,4 @@
-import { SEARCH_POST, UPDATE_INPUT, RECEIVE_POSTS, REQUEST_POSTS, SHOW_MODAL, HIDE_MODAL, RECEIVE_POST_DATA, REQUEST_POST_DATA, POST_UPDATE, REQUEST_LOGIN, RESPONSE_LOGIN, GET_USER_DATA_REQUEST, GET_USER_DATA_RESPONSE, LOGOUT_USER } from './actionTypes';
+import { SEARCH_POST, UPDATE_INPUT, RECEIVE_POSTS, REQUEST_POSTS, SHOW_MODAL, HIDE_MODAL, RECEIVE_POST_DATA, REQUEST_POST_DATA, POST_UPDATE, REQUEST_LOGIN, RESPONSE_LOGIN, GET_USER_DATA_REQUEST, GET_USER_DATA_RESPONSE, LOGOUT_USER, TITLE_VALIDATION, BODY_VALIDATION, USER_VALIDATION, LOGIN_VALIDATION, PASSWORD_VALIDATION } from './actionTypes';
 import {baseConfig} from '../config';
 
 export function searchPost() {
@@ -249,5 +249,44 @@ export function getLoggedUserData(token) {
 export function userLogout() {
     return {
         type: LOGOUT_USER
+    };
+}
+
+/**
+ * validation
+ */
+
+export function checkTitle(value) {
+    return {
+        type: TITLE_VALIDATION,
+        value
+    };
+}
+
+export function checkBody(value) {
+    return {
+        type: BODY_VALIDATION,
+        value
+    };
+}
+
+export function checkUser(value) {
+    return {
+        type: USER_VALIDATION,
+        value
+    };
+}
+
+export function checkLogin(value) {
+    return {
+        type: LOGIN_VALIDATION,
+        value
+    };
+}
+
+export function checkPassword(value) {
+    return {
+        type: PASSWORD_VALIDATION,
+        value
     };
 }
