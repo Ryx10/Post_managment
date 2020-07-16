@@ -30,7 +30,7 @@
   "author": "Cory House",
   "license": "MIT",
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "object-assign": "4.1.0",
     "react": "15.5.4",
     "react-alert": "^2.1.1",
